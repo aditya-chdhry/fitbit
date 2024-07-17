@@ -11,6 +11,49 @@ var rightText = document.getElementById("sign-up");
 // The forms
 var accountForm = document.getElementById("sign-in-info")
 var signinForm = document.getElementById("sign-up-info");
+document.getElementById("sign-up-form").addEventListener("submit", async function(event) {
+  event.preventDefault(); // Prevent the form from submitting the traditional way
+
+  // Get the form data
+  const name = event.target.querySelector('input[placeholder="Name"]').value;
+  const email = event.target.querySelector('input[placeholder="Email"]').value;
+  const password = event.target.querySelector('input[placeholder="Password"]').value;
+
+  // Create an object with the form data
+  const userData = {
+      name: name,
+      email: email,
+      password: password
+  };
+
+  try {
+      // Make a fetch request to sign up the user
+      const response = await fetch('http://localhost:8000/auth/signup', {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(userData)
+      });
+
+      // Check if the request was successful
+      if (response.ok) {
+          const result = await response.json();
+          console.log('User signed up successfully:', result);
+          window.location.href = 'http://127.0.0.1:5500/FitBit-main/index.html';
+          // Optionally, redirect the user or show a success message
+      } else {
+          const error = await response.json();
+          console.error('Sign up failed:', error);
+          // Optionally, show an error message to the user
+      }
+  } catch (error) {
+      console.error('Error during sign up:', error);
+      // Optionally, show an error message to the user
+  }
+
+});
+
 
 // Open the Sign Up page
 openSignUp = () =>{
@@ -53,6 +96,29 @@ openSignIn = () =>{
     signinForm.style.display = "none";
     signinForm.classList.remove("form-right-slide-out")
   },700);
+
+  
+// console.log(JSON.stringify({
+//   "name" : name.value,
+//   "email" : email.value,
+//   "password" : password.value
+// }))
+// const response = fetch("http://localhost:8000/saveUser" , {
+//   method: "POST", 
+//   headers: {
+//     'Content-Type': 'application/json'
+//   },
+//   body :JSON.stringify({
+//     "name" : name.value,
+//     "email" : email.value,
+//     "password" : password.value
+//   })})
+//   .then(function(res){ return res.json() })
+//   .then(function(data){ alert( "success" ) })
+//   return true;
+
+
+
   // display the sign up form once the overlay begins moving left
   setTimeout(function(){
     accountForm.style.display = "flex";
@@ -63,3 +129,11 @@ openSignIn = () =>{
 // When a 'switch' button is pressed, switch page
 openSignUpButton.addEventListener("click", openSignUp, false);
 openSignInButton.addEventListener("click", openSignIn, false);
+
+
+
+
+
+  
+
+
